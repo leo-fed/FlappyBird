@@ -25,10 +25,14 @@ const groundSource = {
 }
 
 
+
 let bgX = 0;
 let X = 0
 const SPEED = 1;
 const PARALLAX = 6;
+
+
+flightStage = 0;
 
 function bgDraw() {
     bgX = (bgX - SPEED / PARALLAX) % bgSource.width;
@@ -96,21 +100,21 @@ function bgDraw() {
 function groundDraw() {
     X = (X - SPEED) % groundSource.width;
 
-    const bgDestinationOne = {
+    const DestinationOne = {
         x: X,
         y: (canvas.height - groundSource.height),
         width: groundSource.width,
         height: groundSource.height
     }
 
-    const bgDestinationTwo = {
+    const DestinationTwo = {
         x: X + groundSource.width,
         y: (canvas.height - groundSource.height),
         width: groundSource.width,
         height: groundSource.height
     }
 
-    const bgDestinationThree = {
+    const DestinationThree = {
         x: X + groundSource.width *2,
         y: (canvas.height - groundSource.height),
         width: groundSource.width,
@@ -124,10 +128,10 @@ function groundDraw() {
         groundSource.width, 
         groundSource.height, 
 
-        bgDestinationOne.x, 
-        bgDestinationOne.y, 
-        bgDestinationOne.width, 
-        bgDestinationOne.height);
+        DestinationOne.x, 
+        DestinationOne.y, 
+        DestinationOne.width, 
+        DestinationOne.height);
 
     ctx.drawImage(
         img, 
@@ -136,10 +140,10 @@ function groundDraw() {
         groundSource.width, 
         groundSource.height, 
 
-        bgDestinationTwo.x, 
-        bgDestinationTwo.y, 
-        bgDestinationTwo.width, 
-        bgDestinationTwo.height);
+        DestinationTwo.x, 
+        DestinationTwo.y, 
+        DestinationTwo.width, 
+        DestinationTwo.height);
 
     ctx.drawImage(
         img, 
@@ -148,16 +152,47 @@ function groundDraw() {
         groundSource.width, 
         groundSource.height, 
 
-        bgDestinationThree.x, 
-        bgDestinationThree.y, 
-        bgDestinationThree.width, 
-        bgDestinationThree.height);
+        DestinationThree.x, 
+        DestinationThree.y, 
+        DestinationThree.width, 
+        DestinationThree.height);
+}
+
+function birdDraw() {
+    flightStage = (flightStage + SPEED / 6);
+    
+    let birdSource = {
+        x: 276,
+        width: 34,
+        height: 26
+    }
+    
+    birdSource.y = 112 + birdSource.height * Math.floor(flightStage % 3);
+
+    const birdDestination = {
+        x: (canvas.width - birdSource.width) / 2,
+        y: (canvas.height - birdSource.height) / 2,
+        width: birdSource.width,
+        height: birdSource.height
+    }
+
+    ctx.drawImage(
+        img, 
+        birdSource.x, 
+        birdSource.y, 
+        birdSource.width, 
+        birdSource.height, 
+
+        birdDestination.x, 
+        birdDestination.y, 
+        birdDestination.width, 
+        birdDestination.height);
 }
 
 function draw() {
     bgDraw();
     groundDraw();
-
+    birdDraw();
     window.requestAnimationFrame(draw);
 }
 
