@@ -50,7 +50,9 @@ const PARALLAX = 6;
 const G = 0.2;
 
 let rateOfFall = 0;
-document.addEventListener("keydown", () => {rateOfFall = -5;})
+document.addEventListener("keydown", () => {rateOfFall = -5;});
+document.addEventListener("touchstart", () => {rateOfFall = -5;});
+document.addEventListener("mousedown", () => {rateOfFall = -5;});
 
 function bgDraw() {
     bgX = (bgX - SPEED / PARALLAX) % bgSource.width;
