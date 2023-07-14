@@ -24,15 +24,33 @@ const groundSource = {
     height: 112
 }
 
+let birdSource = {
+    x: 276,
+    width: 34,
+    height: 26
+}
+
+
+let flightStage = 0;
+let birdPosition = (canvas.height - birdSource.height) / 2;
+
+let birdDestination = {
+    x: (canvas.width - birdSource.width) / 2,
+    y: birdPosition,
+    width: birdSource.width,
+    height: birdSource.height
+}
+
 
 
 let bgX = 0;
 let X = 0
 const SPEED = 1;
 const PARALLAX = 6;
+const G = 0.2;
 
-
-flightStage = 0;
+let rateOfFall = 0;
+document.addEventListener("keydown", () => {rateOfFall = -5;})
 
 function bgDraw() {
     bgX = (bgX - SPEED / PARALLAX) % bgSource.width;
@@ -160,21 +178,12 @@ function groundDraw() {
 
 function birdDraw() {
     flightStage = (flightStage + SPEED / 6);
-    
-    let birdSource = {
-        x: 276,
-        width: 34,
-        height: 26
-    }
-    
+    rateOfFall = rateOfFall + G;
+    birdPosition = birdPosition + rateOfFall;
+
     birdSource.y = 112 + birdSource.height * Math.floor(flightStage % 3);
 
-    const birdDestination = {
-        x: (canvas.width - birdSource.width) / 2,
-        y: (canvas.height - birdSource.height) / 2,
-        width: birdSource.width,
-        height: birdSource.height
-    }
+    birdDestination.y = birdPosition;
 
     ctx.drawImage(
         img, 
@@ -193,7 +202,12 @@ function draw() {
     bgDraw();
     groundDraw();
     birdDraw();
-    window.requestAnimationFrame(draw);
+    if (birdDestination.y < (canvas.height - groundSource.height - birdSource.height)) {
+        window.requestAnimationFrame(draw);
+    } else {
+        console.log("you fail")
+    }
+    
 }
 
 
