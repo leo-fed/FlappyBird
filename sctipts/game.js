@@ -13,7 +13,7 @@ img.src = imgURL;
 const bgSource = {
     x: 0,
     y: 0,
-    width: 276,
+    width: 275,
     height: 228
 }
 
@@ -183,7 +183,7 @@ function birdDraw() {
     rateOfFall = rateOfFall + G;
     birdPosition = birdPosition + rateOfFall;
 
-    birdSource.y = 112 + birdSource.height * Math.floor(flightStage % 3);
+    birdSource.y = 113 + birdSource.height * Math.floor(flightStage % 3);
 
     birdDestination.y = birdPosition;
 
