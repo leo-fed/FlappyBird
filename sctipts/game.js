@@ -32,10 +32,10 @@ let birdSource = {
 
 
 let flightStage = 0;
-let birdPosition = 300;
+let birdPosition = 0.3 * canvas.height;
 
 let birdDestination = {
-    x: canvas.width / 2,
+    x: canvas.width * 0.25,
     y: birdPosition,
     width: birdSource.width,
     height: birdSource.height
@@ -51,9 +51,9 @@ const G = 0.2;
 let angle = 0;
 
 let rateOfFall = 0;
-document.addEventListener("keydown", () => {rateOfFall = -5; angle = -20});
-document.addEventListener("touchstart", () => {rateOfFall = -5; angle = -20});
-document.addEventListener("mousedown", () => {rateOfFall = -5; angle = -20});
+document.addEventListener("keydown", touch);
+document.addEventListener("touchstart", touch);
+document.addEventListener("mousedown", touch);
 
 function bgDraw() {
     bgX = (bgX - SPEED / PARALLAX) % bgSource.width;
@@ -203,9 +203,69 @@ function draw() {
         window.requestAnimationFrame(draw);
 
     } else {
-        console.log("you fail") 
+        console.log("you fail");
+        end()
     }
     
 }
 
-window.requestAnimationFrame(draw)
+function start() {
+    bgDraw();
+    groundDraw();
+    birdDraw();
+    const startImgSourse = {
+        x: 0,
+        y: 228,
+        width: 173,
+        height: 152
+    }
+    ctx.drawImage(
+        img, 
+        startImgSourse.x, 
+        startImgSourse.y, 
+        startImgSourse.width, 
+        startImgSourse.height, 
+
+        (canvas.width - startImgSourse.width)/2, 
+        0.195 * canvas.height,
+        startImgSourse.width, 
+        startImgSourse.height);
+}
+
+function end() {
+    const endImgSourse = {
+        x: 175,
+        y: 228,
+        width: 226,
+        height: 200
+    }
+    
+    ctx.drawImage(
+        img, 
+        endImgSourse.x, 
+        endImgSourse.y, 
+        endImgSourse.width, 
+        endImgSourse.height, 
+
+        (canvas.width - endImgSourse.width)/2, 
+        0.195 * canvas.height,
+        endImgSourse.width, 
+        endImgSourse.height);
+
+        frame = 2;
+}
+
+let frame = 1;
+img.onload = start;
+
+function touch() {
+    if (frame === 1) {
+        window.requestAnimationFrame(draw);
+        frame = 0
+    } else if (frame === 2) {
+        location.reload()
+    }
+    rateOfFall = -5; 
+    angle = -20; 
+    
+}
