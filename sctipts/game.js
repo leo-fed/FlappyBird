@@ -13,19 +13,19 @@ img.src = imgURL;
 const bgSource = {
     x: 0,
     y: 0,
-    width: 275,
+    width: 276,
     height: 228
 }
 
 const groundSource = {
-    x: 276,
+    x: 277,
     y: 0,
     width: 224,
     height: 112
 }
 
 let birdSource = {
-    x: 276,
+    x: 278,
     width: 34,
     height: 26
 }
@@ -46,7 +46,7 @@ let birdDestination = {
 let bgX = 0;
 let X = 0
 const SPEED = 1;
-const PARALLAX = 6;
+const PARALLAX = 5;
 const G = 0.2;
 
 let rateOfFall = 0;
@@ -57,22 +57,8 @@ document.addEventListener("mousedown", () => {rateOfFall = -5;});
 function bgDraw() {
     bgX = (bgX - SPEED / PARALLAX) % bgSource.width;
 
-    const bgDestinationOne = {
+    const bgDestination = {
         x: bgX,
-        y: (canvas.height - bgSource.height),
-        width: bgSource.width,
-        height: bgSource.height
-    }
-
-    const bgDestinationTwo = {
-        x: bgX + bgSource.width,
-        y: (canvas.height - bgSource.height),
-        width: bgSource.width,
-        height: bgSource.height
-    }
-
-    const bgDestinationThree = {
-        x: bgX + bgSource.width *2,
         y: (canvas.height - bgSource.height),
         width: bgSource.width,
         height: bgSource.height
@@ -87,10 +73,10 @@ function bgDraw() {
         bgSource.width, 
         bgSource.height, 
 
-        bgDestinationOne.x, 
-        bgDestinationOne.y, 
-        bgDestinationOne.width, 
-        bgDestinationOne.height);
+        bgDestination.x, 
+        bgDestination.y, 
+        bgDestination.width, 
+        bgDestination.height);
 
     ctx.drawImage(
         img, 
@@ -99,10 +85,10 @@ function bgDraw() {
         bgSource.width, 
         bgSource.height, 
 
-        bgDestinationTwo.x, 
-        bgDestinationTwo.y, 
-        bgDestinationTwo.width, 
-        bgDestinationTwo.height);
+        bgDestination.x + bgSource.width - 0.5, 
+        bgDestination.y, 
+        bgDestination.width, 
+        bgDestination.height);
 
     ctx.drawImage(
         img, 
@@ -111,10 +97,10 @@ function bgDraw() {
         bgSource.width, 
         bgSource.height, 
 
-        bgDestinationThree.x, 
-        bgDestinationThree.y, 
-        bgDestinationThree.width, 
-        bgDestinationThree.height);
+        bgDestination.x + bgSource.width*2 - 1, 
+        bgDestination.y, 
+        bgDestination.width, 
+        bgDestination.height);
 }
 
 function groundDraw() {
@@ -205,12 +191,12 @@ function draw() {
     groundDraw();
     birdDraw();
     if (birdDestination.y < (canvas.height - groundSource.height - birdSource.height)) {
-        window.requestAnimationFrame(draw);
+        window.requestAnimationFrame(draw)
+
     } else {
         console.log("you fail")
     }
     
 }
 
-
-window.requestAnimationFrame(draw);
+window.requestAnimationFrame(draw)
