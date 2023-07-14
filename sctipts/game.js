@@ -32,27 +32,28 @@ let birdSource = {
 
 
 let flightStage = 0;
-let birdPosition = (canvas.height - birdSource.height) / 2;
+let birdPosition = 300;
 
 let birdDestination = {
-    x: (canvas.width - birdSource.width) / 2,
+    x: canvas.width / 2,
     y: birdPosition,
     width: birdSource.width,
     height: birdSource.height
 }
 
 
-
+const DEG = Math.PI / 180;
 let bgX = 0;
 let X = 0
 const SPEED = 1;
 const PARALLAX = 5;
 const G = 0.2;
+let angle = 0;
 
 let rateOfFall = 0;
-document.addEventListener("keydown", () => {rateOfFall = -5;});
-document.addEventListener("touchstart", () => {rateOfFall = -5;});
-document.addEventListener("mousedown", () => {rateOfFall = -5;});
+document.addEventListener("keydown", () => {rateOfFall = -5; angle = -20});
+document.addEventListener("touchstart", () => {rateOfFall = -5; angle = -20});
+document.addEventListener("mousedown", () => {rateOfFall = -5; angle = -20});
 
 function bgDraw() {
     bgX = (bgX - SPEED / PARALLAX) % bgSource.width;
@@ -167,12 +168,17 @@ function groundDraw() {
 function birdDraw() {
     flightStage = (flightStage + SPEED / 6);
     rateOfFall = rateOfFall + G;
+    if (angle < 90) {angle += 5*G}
     birdPosition = birdPosition + rateOfFall;
+    if (birdPosition < birdDestination.height/2) {birdPosition = birdDestination.height/2; rateOfFall = 0}
 
     birdSource.y = 113 + birdSource.height * Math.floor(flightStage % 3);
 
     birdDestination.y = birdPosition;
 
+    ctx.save()
+    ctx.translate(birdDestination.x, birdDestination.y);
+    ctx.rotate(angle * DEG)
     ctx.drawImage(
         img, 
         birdSource.x, 
@@ -180,21 +186,24 @@ function birdDraw() {
         birdSource.width, 
         birdSource.height, 
 
-        birdDestination.x, 
-        birdDestination.y, 
+        -birdDestination.width/2, 
+        -birdDestination.height/2,
         birdDestination.width, 
         birdDestination.height);
+    ctx.restore();
 }
+
+
 
 function draw() {
     bgDraw();
     groundDraw();
     birdDraw();
-    if (birdDestination.y < (canvas.height - groundSource.height - birdSource.height)) {
-        window.requestAnimationFrame(draw)
+    if (birdDestination.y < (canvas.height - groundSource.height - birdDestination.height/2)) {
+        window.requestAnimationFrame(draw);
 
     } else {
-        console.log("you fail")
+        console.log("you fail") 
     }
     
 }
