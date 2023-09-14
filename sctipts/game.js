@@ -30,6 +30,20 @@ let birdSource = {
     height: 26
 }
 
+let pipe1Source = {
+    x: 502,
+    y: 0,
+    width: 52,
+    height: 400
+}
+
+let pipe2Source = {
+    x: 554,
+    y: 0,
+    width: 52,
+    height: 400
+}
+
 
 let flightStage = 0;
 let birdPosition = 0.3 * canvas.height;
@@ -45,7 +59,7 @@ let birdDestination = {
 const DEG = Math.PI / 180;
 let bgX = 0;
 let X = 0
-const SPEED = 1;
+const SPEED = 2;
 const PARALLAX = 5;
 const G = 0.2;
 let angle = 0;
@@ -105,24 +119,24 @@ function bgDraw() {
 }
 
 function groundDraw() {
-    X = (X - SPEED) % groundSource.width;
+    gX = X % groundSource.width
 
     const DestinationOne = {
-        x: X,
+        x: gX,
         y: (canvas.height - groundSource.height),
         width: groundSource.width,
         height: groundSource.height
     }
 
     const DestinationTwo = {
-        x: X + groundSource.width,
+        x: DestinationOne.x + groundSource.width,
         y: (canvas.height - groundSource.height),
         width: groundSource.width,
         height: groundSource.height
     }
 
     const DestinationThree = {
-        x: X + groundSource.width *2,
+        x: DestinationTwo.x + groundSource.width,
         y: (canvas.height - groundSource.height),
         width: groundSource.width,
         height: groundSource.height
@@ -192,27 +206,88 @@ function birdDraw() {
         birdDestination.height);
     ctx.restore();
 }
+let pipes = [{x: canvas.width * 2/3, y: canvas.height/2}];
+const minPipesY = (canvas.height - pipe1Source.height - groundSource.height + 50);
+const maxPipesY = canvas.height - groundSource.height - 68;
+function pipesDraw() {
+    
+    
+    while (pipes[pipes.length - 1].x < canvas.width) {
+        pipes.push({
+            x: pipes[pipes.length - 1].x + pipe1Source.width*4,
+            y: Math.floor(Math.random() * (maxPipesY - minPipesY) + minPipesY)
+        })
+    }
 
+    if (pipes[0].x < - pipe1Source.width) {
+        pipes.shift()
+    }
 
+    for (const pipe of pipes) {
+        ctx.drawImage(
+            img, 
+            pipe1Source.x, 
+            pipe1Source.y, 
+            pipe1Source.width, 
+            pipe1Source.height, 
+    
+            pipe.x, 
+            pipe.y, 
+            pipe1Source.width, 
+            pipe1Source.height);
+        
+            ctx.drawImage(
+                img, 
+                pipe2Source.x, 
+                pipe2Source.y, 
+                pipe2Source.width, 
+                pipe2Source.height, 
+        
+                pipe.x, 
+                pipe.y - pipe2Source.height - birdSource.height*5, 
+                pipe2Source.width, 
+                pipe2Source.height);
+        
+        pipe.x -= SPEED
+    }
+}
+let collision = false
+function collisionDetection() {
+    for (const pipe of pipes) {
+        if ((pipe.x - pipe1Source.width <= birdDestination.width + birdSource.width) && (pipe.x >= birdDestination.width)) {
+            if (!((birdPosition + birdSource.height/2 < pipe.y) && (birdPosition > pipe.y - birdSource.width*5))) {
+                collision = true
+            }
+        } else if (!(birdDestination.y < (canvas.height - groundSource.height - birdDestination.height/2))) {
+            collision = true
+        } else {
+
+        }
+    }
+}
 
 function draw() {
     bgDraw();
+    pipesDraw();
     groundDraw();
     birdDraw();
-    if (birdDestination.y < (canvas.height - groundSource.height - birdDestination.height/2)) {
+    collisionDetection();
+    
+    if (collision === false) {
         window.requestAnimationFrame(draw);
-
     } else {
         console.log("you fail");
         end()
     }
-    
+    X = (X - SPEED);
 }
 
 function start() {
+    collision = false;
     bgDraw();
     groundDraw();
     birdDraw();
+    pipesDraw();
     const startImgSourse = {
         x: 0,
         y: 228,
@@ -252,7 +327,7 @@ function end() {
         endImgSourse.width, 
         endImgSourse.height);
 
-        frame = 2;
+        setTimeout(() => {frame = 2;}, 500)
 }
 
 let frame = 1;
