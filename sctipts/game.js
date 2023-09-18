@@ -44,6 +44,13 @@ let pipe2Source = {
     height: 400
 }
 
+const endImgSourse = {
+    x: 175,
+    y: 228,
+    width: 226,
+    height: 200
+}
+
 
 let flightStage = 0;
 let birdPosition = 0.3 * canvas.height;
@@ -274,7 +281,6 @@ function draw() {
     collisionDetection();
     
     if (collision === false) {
-        window.requestAnimationFrame(draw);
     } else {
         console.log("you fail");
         end()
@@ -307,14 +313,8 @@ function start() {
         startImgSourse.height);
 }
 
-function end() {
-    const endImgSourse = {
-        x: 175,
-        y: 228,
-        width: 226,
-        height: 200
-    }
-    
+function end() {   
+    clearInterval(drawInterval); 
     ctx.drawImage(
         img, 
         endImgSourse.x, 
@@ -335,12 +335,14 @@ img.onload = start;
 
 function touch() {
     if (frame === 1) {
-        window.requestAnimationFrame(draw);
+        drawInterval = setInterval(draw, 16.5); 
         frame = 0
     } else if (frame === 2) {
+        clearInterval(drawInterval);
         location.reload()
     }
     rateOfFall = -5; 
     angle = -20; 
     
 }
+
