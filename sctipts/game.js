@@ -255,7 +255,7 @@ let collision = false
 function collisionDetection() {
     for (const pipe of pipes) {
         if ((pipe.x - pipe1Source.width <= birdDestination.width + birdSource.width) && (pipe.x >= birdDestination.width)) {
-            if (!((birdPosition + birdSource.height/2 < pipe.y) && (birdPosition > pipe.y - birdSource.width*5))) {
+            if (!((birdPosition + birdSource.height/2 < pipe.y) && (birdPosition > pipe.y - birdSource.width*5 + birdSource.height*2))) {
                 collision = true
             }
         } else if (!(birdDestination.y < (canvas.height - groundSource.height - birdDestination.height/2))) {
@@ -285,9 +285,9 @@ function draw() {
 function start() {
     collision = false;
     bgDraw();
+    pipesDraw();
     groundDraw();
     birdDraw();
-    pipesDraw();
     const startImgSourse = {
         x: 0,
         y: 228,
